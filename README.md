@@ -1,235 +1,334 @@
-# ManoSathi 1.0 - Incremental Build
+# ManoSathi — AI Mental Health Companion for Bharat 🇮🇳
 
-**Status:**  ✅ **AUTHENTICATION ADDED** (Feature #2 Complete!)  
-**Created:** 2026-01-04 03:57 AM  
-**Updated:** 2026-01-04 04:30 AM  
-**Purpose:** Clean, feature-by-feature rebuild of Mann-Mitra
+> **24/7 culturally-aware mental health support, powered entirely by AWS — built for every Indian.**
 
----
-
-## 🎉 FEATURES ADDED
-
-### ✅ Feature #1: HomePage (Complete)
-**Added:** 2026-01-04 04:14 AM  
-**Route:** `/`  
-
-**Includes:**
-- ✅ HomePage component with hero section
-- ✅ Main CTA button (Chat with AI)
-- ✅ 3 secondary action cards (Journal, Breathe, Check-In)
-- ✅ Card & Button UI components
-- ✅ React Router setup
-- ✅ Tailwind CSS configuration
-
-### ✅ Feature #2: Authentication System (Complete)
-**Added:** 2026-01-04 04:30 AM  
-**Routes:** `/auth` (Sign In / Sign Up)
-
-**Includes:**
-- ✅ Firebase Authentication integration
-- ✅ Email/Password Sign Up
-- ✅ Email/Password Sign In  
-- ✅ Google OAuth Sign In
-- ✅ Password Reset functionality
-- ✅ User Profile Management (Firestore)
-- ✅ Protected Routes
-- ✅ Auth Context Provider
-- ✅ Password Strength Validator
-- ✅ Loading States
-- ✅ Error Handling with Toast Notifications
-- ✅ Dark Purple/Blue Theme (Original Style)
-
-**Firebase Features:**
-- User authentication (email/password + Google)
-- Firestore user profiles
-- Session management
-- Platform-aware OAuth (popup on web, redirect on mobile)
+[![AWS](https://img.shields.io/badge/AWS-Powered-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com)
+[![Amazon Bedrock](https://img.shields.io/badge/Amazon_Bedrock-Nova_Pro-7D4CDB?logo=amazonaws)](https://aws.amazon.com/bedrock/)
+[![DynamoDB](https://img.shields.io/badge/DynamoDB-Database-4053D6?logo=amazondynamodb)](https://aws.amazon.com/dynamodb/)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## 🚀 QUICK START
+## 🧠 What is ManoSathi?
 
-### 1. Set Up Firebase:
-```bash
-# Copy environment template
-cp .env.example .env
+**ManoSathi** (मनोसाथी — "Mind Companion" in Hindi) is a full-stack mental health support platform designed for Indian youth. It combines:
 
-# Edit .env and add your Firebase credentials from:
-# Firebase Console > Project Settings > General
+- 🤖 **AI-powered empathetic chat** using Amazon Bedrock (Nova Pro)
+- 📓 **Intelligent journaling** with automatic AI insight generation
+- 📊 **Mood & wellness tracking** with PHQ-9 / GAD-7 scoring
+- 🚨 **Crisis detection & intervention** with real-time AASRA helpline integration
+- 🧬 **Long-term memory** that remembers users across sessions
+- 🌐 **14+ Indian language support** (Hindi, English, Hinglish, Tamil, Telugu, and more)
+
+Everything runs on **AWS** — no third-party AI, no Google services.
+
+---
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────────────┐
+│              React Frontend (Vite)               │
+│   Auth · Chat · Journal · Wellness · Dashboard   │
+└─────────────────────┬────────────────────────────┘
+                      │  HTTPS + JWT Bearer Token
+                      ▼
+┌──────────────────────────────────────────────────┐
+│       Amazon API Gateway  (HTTP API)             │
+│       CORS: * · All routes auto-preflight        │
+└──────┬──────────┬──────────┬────────────┬────────┘
+       │          │          │            │
+       ▼          ▼          ▼            ▼
+  authLambda  profileLambda  journalLambda  chatSessionLambda
+       │          │          │            │
+       └──────────┴────┬─────┴────────────┘
+                       │
+          ┌────────────┴────────────┐
+          ▼                         ▼
+   Amazon DynamoDB          Amazon Bedrock
+   ─────────────            ─────────────
+   manosathi-users          amazon.nova-pro-v1:0
+   manosathi-chats          ConverseCommand (SigV4)
+   manosathi-journals       Empathic · Clinical · Journal
+   manosathi-treatments
 ```
 
-### 2. Set Up Firebase Functions (Backend):
+---
+
+## ✨ Features
+
+### 🤖 AI Chat (Powered by Amazon Bedrock)
+- Warm, empathetic responses in Hindi / English / mixed
+- Hybrid conversation memory (all user messages + last 2 AI responses)
+- Long-term memory stored in DynamoDB across sessions
+- 3-attempt retry with exponential backoff on cold starts
+- Crisis detection with AASRA (91-22-27546669) helpline overlay
+
+### 📓 Smart Journaling
+- Mood tracking: 😄 Amazing · 😊 Good · 😐 Okay · 😔 Low · 😢 Rough
+- Async AI analysis via Bedrock generating:
+  - 💬 Conversational Response
+  - 🧠 Therapeutic Perspective
+  - 🔍 Thought Patterns (cognitive distortions)
+  - 💭 Emotional Nuance
+  - 💡 Try This (actionable exercise)
+  - 🏷️ Key Themes
+
+### 🔐 Authentication (AWS JWT)
+- Email/password signup & signin
+- JWT tokens generated by `authLambda`, stored in `localStorage`
+- Session restored on reload via `/auth/me`
+- HIPAA-compliant auto-logout via session timeout hook
+
+### 📊 Wellness Dashboard
+- PHQ-9 / GAD-7 assessment scores passed to AI for context
+- Total chats, journal entries, check-ins at a glance
+- Mood trend tracking over time
+
+### 🌬️ Wellness Tools
+- Guided breathing exercises (animated)
+- Daily wisdom quotes (live API + 30+ local fallbacks)
+- Curated mental health resources
+
+### 🧬 Long-Term Memory
+- Pattern-based fact extraction from conversations
+- Categories: education, family, career, health, interests, goals, challenges
+- Top 5 facts injected into every Bedrock prompt for personalized responses
+- Stored in DynamoDB, persists across sessions
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20.x
+- AWS account with credentials configured (`~/.aws/credentials`)
+- AWS profile named `ai4bharat` (or update commands)
+
+### 1. Clone & Install Frontend
 ```bash
-# Navigate to functions folder
-cd functions
-
-# Copy environment template
-cp .env.example .env
-
-# Edit functions/.env and add your API keys:
-# - GEMINI_API_KEY (for AI analysis)
-
-# Install function dependencies
+git clone https://github.com/Manya-Goel132/Well-Hackers-ManoSathi-AI-For-Bharat.git
+cd Well-Hackers-ManoSathi-AI-For-Bharat
 npm install
-
-# Build functions
-npm run build
-
-# Return to root
-cd ..
 ```
 
-### 3. Install Frontend Dependencies:
-```bash
-npm install
-```
-
-### 4. Run Development Server:
+### 2. Run Development Server
 ```bash
 npm run dev
+# → http://localhost:5174
 ```
-App will open at `http://localhost:5174`
+The frontend connects to the deployed AWS backend automatically.
 
-### 5. (Optional) Test Functions Locally:
+### 3. (Optional) Deploy Backend Yourself
 ```bash
-# Install Firebase CLI if you haven't
-npm install -g firebase-tools
+cd functions
+npm install
+npm run build         # TypeScript compile
 
-# Login to Firebase
-firebase login
-
-# Start emulators (backend + database)
-firebase emulators:start
+# Deploy to AWS
+AWS_PROFILE=ai4bharat serverless deploy --stage dev
 ```
 
 ---
 
-## 📂 PROJECT STRUCTURE
+## 📂 Project Structure
 
 ```
-ManoSathi1.0/
-├── functions/                        ✅ Firebase Functions (Backend)
+ManoSathi/
+├── functions/                          AWS Lambda Backend
 │   ├── src/
-│   │   ├── index.ts                  ✅ Functions export
-│   │   ├── journalAIAnalysis.ts     ✅ AI journal analysis
-│   │   └── ...other services
-│   ├── package.json                  ✅ Function dependencies
-│   ├── tsconfig.json                 ✅ TypeScript config
-│   ├── .env.example                  ✅ API keys template
-│   └── README.md                     ✅ Functions documentation
+│   │   ├── api/
+│   │   │   ├── authLambda.ts           JWT signup · signin · /me
+│   │   │   ├── profileLambda.ts        GET/PUT /profile
+│   │   │   ├── journalLambda.ts        CRUD /journals
+│   │   │   ├── chatSessionLambda.ts    CRUD /sessions
+│   │   │   ├── generateEmpathicResponseLambda.ts   Standard AI chat
+│   │   │   ├── generateClinicalResponseLambda.ts   Pro/clinical AI
+│   │   │   └── analyzeJournalEntryLambda.ts         Journal insights
+│   │   ├── aws/
+│   │   │   └── dynamoDB.ts             DynamoDB client + table names
+│   │   ├── awsBedrockAI.ts             Bedrock ConverseCommand integration
+│   │   ├── aiOrchestrator.ts           Context assembly + routing
+│   │   ├── memoryManager.ts            DynamoDB-backed memory extraction
+│   │   └── therapeuticKnowledgeBase.ts Static CBT/DBT knowledge
+│   ├── serverless.yml                  Serverless Framework config (CORS, routes)
+│   ├── tsconfig.json                   TypeScript config
+│   └── package.json                    AWS SDK v3 dependencies only
+│
 ├── src/
 │   ├── components/
 │   │   ├── auth/
-│   │   │   ├── AuthProvider.tsx      ✅ Auth context
-│   │   │   ├── SignInForm.tsx        ✅ Sign in page
-│   │   │   ├── SignUpForm.tsx        ✅ Sign up page
-│   │   │   ├── AuthButton.tsx        ✅ Auth button
-│   │   │   ├── PasswordStrengthIndicator.tsx ✅ Password validator
-│   │   │   └── animations.css        ✅ Auth animations
-│   │   ├── ui/
-│   │   │   ├── button.tsx            ✅ Button component
-│   │   │   ├── card.tsx              ✅ Card component
-│   │   │   ├── input.tsx             ✅  Input component
-│   │   │   ├── textarea.tsx          ✅ Textarea component
-│   │   │   └── utils.ts              ✅ Utility functions
-│   │   ├── HomePage.tsx              ✅ Home page
-│   │   └── Journal.tsx               ✅ Journal page
+│   │   │   ├── AuthProvider.tsx         AWS JWT auth context
+│   │   │   ├── SignInForm.tsx
+│   │   │   └── SignUpForm.tsx
+│   │   ├── Chat.tsx                     AI chat interface
+│   │   ├── Journal.tsx                  Journaling + Bedrock insights
+│   │   ├── checkin/CheckIn.tsx          PHQ-9 / GAD-7 check-in
+│   │   ├── Breathe.tsx                  Guided breathing
+│   │   ├── DailyWisdom.tsx              Quotes with API + fallback
+│   │   ├── HomePage.tsx                 Dashboard
+│   │   └── profile/ProfilePage.tsx      Profile management
 │   ├── services/
-│   │   └── firebaseService.ts        ✅ Firebase SDK integration
-│   ├── utils/
-│   │   └── platform.ts               ✅ Platform detection
-│   ├── types/
-│   │   └── index.ts                  ✅ Type definitions
-│   ├── App.tsx                       ✅ Main app with auth routing
-│   ├── main.tsx                      ✅ Entry point
-│   └── index.css                     ✅ Global styles
-├── .env.example                      ✅ Firebase config template
-├── firebase.json                     ✅ Firebase project config
-├── firestore.rules                   ✅ Database security rules
-├── firestore.indexes.json            ✅ Database indexes
-├── index.html                        ✅ HTML template
-├── package.json                      ✅ Dependencies
-├── vite.config.ts                    ✅  Vite configuration
-├── tsconfig.json                     ✅ TypeScript config
-├── tailwind.config.js                ✅ Tailwind config
-├── postcss.config.js                 ✅ PostCSS config
-├── .gitignore                        ✅ Git ignore rules
-└── README.md                         ✅ This file
+│   │   ├── firebaseService.ts           AWS API wrapper (JWT + fetch)
+│   │   ├── standardAIService.ts         AI fetch with 3-attempt retry
+│   │   ├── firebaseShim.ts              Legacy stubs (no-ops)
+│   │   └── useSessionTimeout.ts         HIPAA auto-logout hook
+│   ├── App.tsx
+│   └── index.css
+│
+├── requirements.md                      Full product requirements
+├── design.md                            System design document
+└── README.md                            This file
 ```
 
 ---
 
-## 📊 CURRENT STATUS
+## ☁️ AWS Services Used
 
-- **Features Added:** 2/150+
-- **Files Created:** 27 files  
-- **Build Progress:** ~2%
-- **Runnable:** ✅ YES
+| Service | Purpose |
+|---|---|
+| **Amazon Bedrock** (Nova Pro) | Empathic AI chat, clinical responses, journal analysis |
+| **AWS Lambda** (Node 20.x) | All backend compute — auth, profile, journal, chat, AI |
+| **Amazon API Gateway** | HTTP API with gateway-level CORS (204 preflight for all routes) |
+| **Amazon DynamoDB** | Users, chats, journals, treatments — all PAY_PER_REQUEST |
+| **AWS IAM** | Lambda execution role → DynamoDB + Bedrock (SigV4 auth) |
+| **Amazon CloudWatch** | Lambda logs and error monitoring |
 
----
+### DynamoDB Tables
+| Table | Hash Key | GSI |
+|---|---|---|
+| `manosathi-users-dev` | `id` | `email-index` |
+| `manosathi-chats-dev` | `chatId` | `userId-lastMessageAt-index` |
+| `manosathi-journals-dev` | `id` | `userId-createdAt-index` |
+| `manosathi-treatments-dev` | — | — |
 
-## 🔐 AUTHENTICATION FLOW
-
-1. User visits app → Redirected to `/auth`
-2. Can choose Sign In or Sign Up
-3. **Sign Up:**
-   - Enter name, email, password
-   - Password validation (8+ chars, uppercase, lowercase, number)
-   - Create account → Auto sign in
-4. **Sign In:**
-   - Enter email, password
-   - OR click "Continue with Google"
-   - Remember me option
-   - Forgot password link
-5. After auth → Redirect to HomePage (protected)
-6. User state persists across sessions
-
----
-
-## 🎨 AUTH PAGE STYLES
-
-The authentication pages use the **original dark theme**:
-- Black background
-- Purple/Blue gradient orbs
-- Animated grid pattern
-- Glassmorphism cards
-- Smooth animations
-
-This contrasts beautifully with the HomePage's sage green theme!
+### Live API Endpoint
+```
+https://6gcmnzrb72.execute-api.us-east-1.amazonaws.com
+```
 
 ---
 
-## 🏗️ NEXT RECOMMENDED FEATURES
+## 🔑 Authentication Flow
 
-Based on the recommended build order:
-
-### Phase 1: Foundation (In Progress)
-1. ✅ ~~HomePage~~ (DONE)
-2. ✅ ~~Authentication & User Management~~ (DONE)
-3. ⏳ Add user profile page
-4. ⏳ Add settings page
-
----
-
-## 📝 TECHNICAL DETAILS
-
-**Stack:**
-- React 18.3.1
-- TypeScript 5.9.3
-- Vite 6.3.5
-- Tailwind CSS 3.4.17
-- React Router 7.8.2
-- Firebase 11.1.0
-- Lucide React (icons)
-- Sonner (toasts)
-
-**Firebase Services:**
-- Authentication (email/password + Google OAuth)
-- Firestore (user profiles)
-- Platform detection (mobile vs web)
+```
+User → Sign Up Form
+         │
+         ▼
+POST /auth/signup → authLambda → DynamoDB (SHA256 + salt)
+         │
+         ▼
+   Returns JWT token
+         │
+         ▼
+  Stored in localStorage
+         │
+         ▼
+All API calls: Authorization: Bearer <token>
+         │
+         ▼
+Page reload → GET /auth/me → restore session
+```
 
 ---
 
-**Folder:** `/ManoSathi1.0/`  
-**Status:** ✅ **READY & RUNNABLE**  
-**Next:** Awaiting user instruction for next feature
+## 🤖 AI Response Flow
+
+```
+User message
+    │
+    ▼
+standardAIService.ts (3-attempt retry, 28s AbortController)
+    │
+    ▼
+POST /chat/empathic → generateEmpathicResponseLambda
+    │
+    ├── Fetch user profile from DynamoDB
+    ├── Fetch long-term memory facts (top 5)
+    ├── Build system prompt (therapeutic KB + user context)
+    ├── Assemble hybrid history (all user msgs + last 2 AI msgs)
+    │
+    ▼
+Amazon Bedrock ConverseCommand (amazon.nova-pro-v1:0)
+    │
+    ▼
+Parse response → Risk assessment → Cultural adaptation
+    │
+    ▼
+Save interaction to DynamoDB (manosathi-chats)
+    │
+    ▼
+Return structured TherapeuticResponse to frontend
+```
+
+---
+
+## 🌐 Language Support
+
+ManoSathi supports **14+ Indian languages**:
+
+Hindi · English · Hinglish (Mixed) · Tamil · Telugu · Bengali · Gujarati · Marathi · Kannada · Malayalam · Punjabi · Assamese · Odia · Urdu · Sanskrit
+
+Amazon Bedrock Nova Pro automatically detects and responds in the user's language.
+
+---
+
+## 🏥 Why AI? Why AWS?
+
+### Why AI is Required
+Mental health support needs to be:
+- **Always available** — therapists aren't available at 3 AM
+- **Non-judgmental** — users share things they can't tell family
+- **Personalized** — remembers context, adjusts communication style
+- **Multilingual** — India's diversity demands it
+- **Affordable** — traditional therapy costs ₹2000–5000/session
+
+AI (Amazon Bedrock) enables all of this at scale.
+
+### Why AWS?
+- **Amazon Bedrock** gives access to state-of-the-art foundation models (Nova Pro) with enterprise-grade security
+- **Lambda + DynamoDB** scales from 1 to 1 million users with zero infrastructure management
+- **IAM-based auth** to Bedrock means no API keys in code — cryptographically secure
+- **All data stays in AWS** — no third-party AI providers see user mental health data
+
+---
+
+## 🛡️ Privacy & Safety
+
+- Passwords hashed with **SHA256 + random salt** (never stored plaintext)
+- All traffic over **HTTPS** (API Gateway managed)
+- **No PII** sent to any external service
+- **Session timeout** for HIPAA-compliant auto-logout
+- **Crisis resources** always available: AASRA `91-22-27546669`
+- Data stored in **AWS us-east-1** only
+
+---
+
+## 📈 Success Metrics
+
+| Metric | Target |
+|---|---|
+| Activation rate | >60% |
+| D7 Retention | >20% |
+| AI response time (warm) | <5 seconds |
+| Crisis intervention completion | >80% |
+| App load time | <3 seconds |
+| Uptime | >99.5% |
+
+---
+
+## 👥 Team — Well Hackers
+
+Built for **AI4Bharat Hackathon 2026**
+
+---
+
+## 📄 License
+
+MIT © 2026 ManoSathi / Well Hackers
+
+---
+
+*ManoSathi is a mental health support tool, not a replacement for professional therapy. If you are in crisis, please call AASRA: 91-22-27546669.*
