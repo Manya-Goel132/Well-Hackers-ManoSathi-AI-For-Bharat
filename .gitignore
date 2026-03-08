@@ -30,8 +30,22 @@ dist-ssr
 .env.test.local
 .env.production.local
 
-# Docs
+# Media & Binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pptx
+*.pdf
+*.zip
+
+# Docs (keep only README)
 *.md
 FEATURE_DOCUMENTATION/
 !README.md
-!README.md
+
+# Training & Raw Data
+*.txt
+*.jsonl
+training_data/
